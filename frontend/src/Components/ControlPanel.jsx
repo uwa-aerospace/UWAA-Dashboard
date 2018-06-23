@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 import {Row, Col} from 'antd';
 import {Steps, Form, Button, Icon, Input, Card} from 'antd';
-import {Line, LineChart, XAxis, YAxis, CartesianGrid, Tooltip, Label, ReferenceLine} from 'recharts';
+import {LineChart} from 'react-easy-chart';
 const Step = Steps.Step;
 const FormItem = Form.Item;
 const Search = Input.Search;
 
 class ControlPanel extends Component{
 	state = {
-		data: [],
+		data: [[{x: 0, y: 0}, {x: 0.1, y: 0}]],
 		command_string: '',
 		flight_computer_status: 'RK_STARTUP',
 		flight_status_text: 'Flight Computer Has Started Up',
@@ -103,14 +103,9 @@ class ControlPanel extends Component{
 						</Row>
 					</Col>
 					<Col span={16}>
-						<LineChart width={900} height={400} data={data} margin={{top: 5, right: 5, bottom: 15, left: 15}}>
-							<Line type="monotone" dataKey="alti" stroke="#8884d8" />
-  							<ReferenceLine y={30} label="Target Height" isFront={true} alwaysShow={true} stroke="#82ca9d" />
-							<CartesianGrid strokeDasharray="3 3"/>
-							<Tooltip/>
-							<XAxis dataKey="time" unit="s"><Label value="Time Since Launch (s)" position="bottom" offset={0}/></XAxis>
-							<YAxis label={{value: "Height", angle: -90, position: 'left', offset: 0}} unit="m"/>
-						</LineChart>
+						<LineChart height={400} width={800} 
+						axes axisLabels={{x: 'Time (s)', y: 'Height (m)'}} xTicks={5} yTicks={5}
+						margin={{top: 10, right: 10, bottom: 50, left: 50}} data={data}/>
 					</Col>
 				</Row>
 			</div>
