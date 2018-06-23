@@ -1,6 +1,9 @@
-.idea/
-Lib/
-Include/
-Scripts/
+frontend/node_modules/
+
 tcl/
+Scripts/
+.idea/
+Include/
+Lib/
+
 pip-selfcheck.json
