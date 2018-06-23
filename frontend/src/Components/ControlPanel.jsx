@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Row, Col} from 'antd';
 import {Steps, Form, Button, Icon, Input, Card} from 'antd';
-import RTChart from 'react-rt-chart';
+import {Line, LineChart, XAxis, YAxis, CartesianGrid, Tooltip, Label, ReferenceLine} from 'recharts';
 const Step = Steps.Step;
 const FormItem = Form.Item;
 const Search = Input.Search;
@@ -103,7 +103,14 @@ class ControlPanel extends Component{
 						</Row>
 					</Col>
 					<Col span={16}>
-						<RTChart fields={['Time', 'Height']} maxValues={10000} dateFormat={""} initialData={[{date: '0', 'Time': 0, 'Height': 0}]}/>
+						<LineChart width={900} height={400} data={data} margin={{top: 5, right: 5, bottom: 15, left: 15}}>
+							<Line type="monotone" dataKey="alti" stroke="#8884d8" />
+  							<ReferenceLine y={30} label="Target Height" isFront={true} alwaysShow={true} stroke="#82ca9d" />
+							<CartesianGrid strokeDasharray="3 3"/>
+							<Tooltip/>
+							<XAxis dataKey="time" unit="s"><Label value="Time Since Launch (s)" position="bottom" offset={0}/></XAxis>
+							<YAxis label={{value: "Height", angle: -90, position: 'left', offset: 0}} unit="m"/>
+						</LineChart>
 					</Col>
 				</Row>
 			</div>
