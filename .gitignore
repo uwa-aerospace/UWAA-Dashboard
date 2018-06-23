@@ -4,3 +4,8 @@ Include/
 Scripts/
 tcl/
 pip-selfcheck.json
+
+backend/__pycache__/
+frontend/node_modules/
+frontend/build/
+backend/flight_data/

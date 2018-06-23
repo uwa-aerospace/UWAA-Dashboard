@@ -1,29 +1,55 @@
 import React, {Component} from 'react';
 import {Row, Col} from 'antd';
-import {Steps, Form, Button, Icon, Input, Card} from 'antd';
-import {LineChart} from 'react-easy-chart';
+import {Steps, Form, Button, Icon, Input, Card, notification} from 'antd';
+import AltitudeChart from './AltitudeChart';
 const Step = Steps.Step;
 const FormItem = Form.Item;
 const Search = Input.Search;
 
 class ControlPanel extends Component{
 	state = {
-		data: [[{x: 0, y: 0}, {x: 0.1, y: 0}]],
 		command_string: '',
-		flight_computer_status: 'RK_STARTUP',
+		progress_error: false,
+		curr_flight_sequence_id: 0,
+		flight_computer_status: 'Startup',
 		flight_status_text: 'Flight Computer Has Started Up',
-		flight_computer_sequence: 'RK_STARTUP',
+		flight_computer_sequence: 'Startup',
 		flight_sequence_text: 'Flight Computer Has Started Up',
 	}
+
 	componentDidMount() {
-		this.interval = setInterval(() => this.fetchData(), 2000);
+		this.interval = setInterval(() => this.fetchData(), 500);
 	}
 	componentWillUnmount() {
 		clearInterval(this.interval);
-	}
+    }
 
 	handleChange(value) {
 		this.setState({command_string: value.target.value});
+	}
+
+	openNotification = (type, title, description) => {
+		notification[type]({
+		  message: title,
+		  description: description,
+		  placement: 'bottomRight',
+		  duration: 5,
+		});
+	  };
+
+	getProgressID(api_id) {
+		if (api_id >= 0 && api_id <= 2)			return 0;
+		else if (api_id === 3) 					return 1;
+		else if (api_id === 4) 					return 2;
+		else if (api_id === 6) 					return 3;
+		else if (api_id === 7) 					return 4;
+		else if (api_id === 8) 					return 5;
+		else if (api_id === 9) 					return 6;
+		else if (api_id === 10 || api_id === 11) 	return 7;
+		else if (api_id === 12 || api_id === 13) 	return 8;
+		else if (api_id === 14) 					return 9;
+
+		if (api_id === 5 || api_id === 99) 		return -1;
 	}
 
 	fetchData() {
@@ -32,11 +58,25 @@ class ControlPanel extends Component{
 				method: 'GET',
 			});
 			const content = await rawResponse.json();
-			var arr = [];
+			var seq_id = this.state.curr_flight_sequence_id;
+			var stat = this.state.flight_computer_status;
+			var seq = this.state.flight_computer_sequence
+			var progress_error = this.state.progress_error;
 			for (var key in content) {
-				arr.push(content[key]);
+				seq = content[key]['sequence']
+				stat = content[key]['status']
+				if (parseInt(this.getProgressID(content[key]['status_id'])) !== -1) {
+					seq_id = parseInt(this.getProgressID(content[key]['status_id']));
+					progress_error = false;
+				} else {
+					progress_error = true;
+				}
 			}
-			this.setState({data: arr});
+			if (seq_id != this.state.curr_flight_sequence_id && content[key] != undefined && content[key]['status'] != undefined) {
+				var notify_type = progress_error ? 'error' : 'success';
+				this.openNotification(notify_type, 'Status -> ' + content[key]['status'], '');
+			}
+			this.setState({curr_flight_sequence_id: seq_id, flight_computer_sequence: seq, flight_computer_status: stat, progress_error: progress_error});
 		})();
 	}
 
@@ -57,39 +97,37 @@ class ControlPanel extends Component{
 	}
 
 	render() {
-		const data = this.state.data;
-		console.log(data);
-		const status_card_title = 'Status - ' + this.state.flight_computer_status;
-		const sequence_card_title = 'Sequence - ' + this.state.flight_computer_sequence;
+		const data = this.state.altitude_data;
+		const flight_status_card_title = this.state.flight_computer_sequence+' - '+this.state.flight_computer_status;
+		const progress_status = this.state.progress_error ? 'error' : 'process';
 		return (
 			<div className="control-panel" style={{height: '100%'}}>
 				<Row style={{ marginBottom: 16 }}>
-					<Steps current={6} progressDot={true}>
-						<Step title="Start Up"/>
-						<Step title="Diagnostics Start"/>
-						<Step title="Diagnostics Finish"/>
-						<Step title="Ready"/>
-						<Step title="Launch"/>
-						<Step title="Coast" />
-						<Step title="Apogee" />
-						<Step title="Deploy Drouge"/>
-						<Step title="Deploy Mains"/>
-						<Step title="Landed"/>
-					</Steps>
+					<Col span={6} style={{paddingRight: '1.5vw', borderRightWidth: '1px', borderRightColor: '#eee', borderRightStyle:'solid'}}>
+						<Steps current={this.state.curr_flight_sequence_id} size={'small'} direction={'vertical'} status={progress_status}>
+							<Step title="Start Up"/>
+							<Step title="Diagnostics Start"/>
+							<Step title="Diagnostics Finish"/>
+							<Step title="Ready"/>
+							<Step title="Launch"/>
+							<Step title="Coast" />
+							<Step title="Apogee" />
+							<Step title="Deploy Drouge"/>
+							<Step title="Deploy Mains"/>
+							<Step title="Landing"/>
+							<Step title="Landed"/>
+						</Steps>
+					</Col>
+					<Col span={18}>
+						<AltitudeChart />
+					</Col>
 				</Row>
 				<Row style={{ height: '100%'}}>
-					<Col span={8} style={{paddingRight: '1.5vw', borderRightWidth: '1px', borderRightColor: '#eee', borderRightStyle:'solid'}}>
+					<Col span={6} style={{paddingRight: '1.5vw', borderRightWidth: '1px', borderRightColor: '#eee', borderRightStyle:'solid'}}>
 						<Row style={{ marginBottom: 8 }}>
 							<Col>
 								<Row justify='center' style={{ marginBottom: 8 }}>
-									<Card hoverable={true} title={sequence_card_title} extra={<Icon type="check-circle" style={{color:'green'}}/>}>
-										{this.state.flight_sequence_text}
-									</Card>
-								</Row>
-								<Row justify='center' style={{ marginBottom: 8 }}>
-									<Card hoverable={true} title={status_card_title} extra={<Icon type="check-circle" style={{color:'green'}}/>}>
-										{this.state.flight_status_text}
-									</Card>
+									<Card hoverable={true} title={flight_status_card_title} extra={<Icon type="check-circle" style={{color:'green'}}/>} />
 								</Row>
 							</Col>
 						</Row>
@@ -102,11 +140,7 @@ class ControlPanel extends Component{
 							</Form>
 						</Row>
 					</Col>
-					<Col span={16}>
-						<LineChart height={400} width={800} 
-						axes axisLabels={{x: 'Time (s)', y: 'Height (m)'}} xTicks={5} yTicks={5}
-						margin={{top: 10, right: 10, bottom: 50, left: 50}} data={data}/>
-					</Col>
+					
 				</Row>
 			</div>
 		);
