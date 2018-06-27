@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Layout, Menu, Icon } from 'antd';
 import ControlPanel from './Components/ControlPanel';
+import AnalysisPanel from './Components/AnalysisPanel';
 import './App.css';
 const { Content, Sider } = Layout;
 
-const content = [<ControlPanel/>, 'world', 'hi'];
+const content = [<ControlPanel/>, <AnalysisPanel />, 'hi'];
 
 class App extends Component {
   state = {
@@ -12,16 +13,13 @@ class App extends Component {
     content_selected: 1,
   };
   onCollapse = (collapsed) => {
-    console.log(collapsed);
     this.setState({ collapsed });
   }
   handleContentChange = (item, key, selectedKeys) => {
-    console.log(item.key);
     this.setState({content_selected: item.key});
   }
   render() {
     const content_fill = content[this.state.content_selected-1];
-    console.log(content_fill);
     return (
       <Layout style={{ minHeight: '100vh'}}>
           <Sider collapsible={true} collapsed={this.state.collapsed} onCollapse={this.onCollapse}>

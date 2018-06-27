@@ -25,17 +25,20 @@ class index(Resource):
         data = {}
         while not from_ardu_q.empty():
             value = str(from_ardu_q.get(), 'utf-8').replace('\r', '').replace('\n', '').split(',')
-            data[value[0]] = {}
-            data[value[0]]['time'] = str(int(value[0])/1000)
-            data[value[0]]['sequence'] = sequence_to_str[value[1]]
-            data[value[0]]['status_id'] = int(value[2])
-            data[value[0]]['status'] = status_to_str[value[2]]
+            if len(value) >= 3:
+                data[value[0]] = {}
+                data[value[0]]['time'] = str(int(value[0])/1000)
+                data[value[0]]['sequence'] = sequence_to_str[value[1]]
+                data[value[0]]['status_id'] = int(value[2])
+                data[value[0]]['status'] = status_to_str[value[2]]
 
-            if len(value) > 3:
-                data[value[0]]['alti'] = value[3]
-                data[value[0]]['velo'] = value[3]
-                data[value[0]]['accel'] = value[4]
-            print(data)
+                if len(value) > 3:
+                    data[value[0]]['alti'] = value[3]
+                    data[value[0]]['velo'] = value[3]
+                    data[value[0]]['accel'] = value[4]
+            else:
+                print(value)
+
             to_file_q.put(value)
             from_ardu_q.task_done()
         return data

@@ -11,6 +11,7 @@ class ControlPanel extends Component{
 		command_string: '',
 		progress_error: false,
 		curr_flight_sequence_id: 0,
+		altitude_data: [],
 		flight_computer_status: 'Startup',
 		flight_status_text: 'Flight Computer Has Started Up',
 		flight_computer_sequence: 'Startup',
@@ -18,7 +19,7 @@ class ControlPanel extends Component{
 	}
 
 	componentDidMount() {
-		this.interval = setInterval(() => this.fetchData(), 500);
+		this.interval = setInterval(() => this.fetchData(), 200);
 	}
 	componentWillUnmount() {
 		clearInterval(this.interval);
@@ -51,7 +52,7 @@ class ControlPanel extends Component{
 
 		if (api_id === 5 || api_id === 99) 		return -1;
 	}
-
+	
 	fetchData() {
 		(async () => {
 			const rawResponse = await fetch('http://localhost:5000/', {
@@ -62,7 +63,9 @@ class ControlPanel extends Component{
 			var stat = this.state.flight_computer_status;
 			var seq = this.state.flight_computer_sequence
 			var progress_error = this.state.progress_error;
+			var arr = this.state.altitude_data.slice();
 			for (var key in content) {
+				arr.push({time: parseInt(key)/1000, alti: parseInt(content[key]['alti'])});
 				seq = content[key]['sequence']
 				stat = content[key]['status']
 				if (parseInt(this.getProgressID(content[key]['status_id'])) !== -1) {
@@ -72,11 +75,11 @@ class ControlPanel extends Component{
 					progress_error = true;
 				}
 			}
-			if (seq_id != this.state.curr_flight_sequence_id && content[key] != undefined && content[key]['status'] != undefined) {
+			if (seq_id !== this.state.curr_flight_sequence_id && content[key] !== undefined && content[key]['status'] !== undefined) {
 				var notify_type = progress_error ? 'error' : 'success';
 				this.openNotification(notify_type, 'Status -> ' + content[key]['status'], '');
 			}
-			this.setState({curr_flight_sequence_id: seq_id, flight_computer_sequence: seq, flight_computer_status: stat, progress_error: progress_error});
+			this.setState({altitude_data: arr, curr_flight_sequence_id: seq_id, flight_computer_sequence: seq, flight_computer_status: stat, progress_error: progress_error});
 		})();
 	}
 
@@ -119,7 +122,7 @@ class ControlPanel extends Component{
 						</Steps>
 					</Col>
 					<Col span={18}>
-						<AltitudeChart />
+						<AltitudeChart altitude_data={data}/>
 					</Col>
 				</Row>
 				<Row style={{ height: '100%'}}>

@@ -8,4 +8,5 @@ pip-selfcheck.json
 backend/__pycache__/
 frontend/node_modules/
 frontend/build/
+frontend/.vs/
 backend/flight_data/
