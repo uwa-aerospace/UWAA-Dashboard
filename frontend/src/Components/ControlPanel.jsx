@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Row, Col} from 'antd';
-import {Steps, Form, Button, Icon, Input, Card, notification} from 'antd';
+import {Steps, Form, Button, Icon, Input, Card, notification, List} from 'antd';
 import AltitudeChart from './AltitudeChart';
 const Step = Steps.Step;
 const FormItem = Form.Item;
@@ -122,28 +122,39 @@ class ControlPanel extends Component{
 						</Steps>
 					</Col>
 					<Col span={18}>
-						<AltitudeChart altitude_data={data}/>
+						<Row>
+							<AltitudeChart altitude_data={data}/>
+						</Row>
+						<Row>
+							<Col span={6} push={1}>
+								<Card hoverable={true} title={flight_status_card_title} extra={<Icon type="check-circle" style={{color:'green'}}/>}>
+									<List
+										itemLayout="horizontal"
+										dataSource={data}
+										renderItem={item => (
+										<List.Item>
+											<List.Item.Meta
+											avatar={}
+											title={<a href="https://ant.design">{item.title}</a>}
+											description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+											/>
+										</List.Item>
+										)}
+									/>
+								</Card>
+							</Col>
+						</Row>
 					</Col>
 				</Row>
 				<Row style={{ height: '100%'}}>
-					<Col span={6} style={{paddingRight: '1.5vw', borderRightWidth: '1px', borderRightColor: '#eee', borderRightStyle:'solid'}}>
-						<Row style={{ marginBottom: 8 }}>
-							<Col>
-								<Row justify='center' style={{ marginBottom: 8 }}>
-									<Card hoverable={true} title={flight_status_card_title} extra={<Icon type="check-circle" style={{color:'green'}}/>} />
-								</Row>
-							</Col>
-						</Row>
-						<Row>
-							<Form>
-								<FormItem>
-									<Search prefix={<Icon type="code-o"/>} type="text" placeholder="Enter Command" enterButton="Send" size="large" 
-									onSearch={value => this.handleSend(value)} onChange={value => this.handleChange(value)} value={this.state.command_string}/>
-								</FormItem>
-							</Form>
-						</Row>
+					<Col span={6}>
+						<Form>
+							<FormItem>
+								<Search prefix={<Icon type="code-o"/>} type="text" placeholder="Enter Command" enterButton="Send" size="large" 
+								onSearch={value => this.handleSend(value)} onChange={value => this.handleChange(value)} value={this.state.command_string}/>
+							</FormItem>
+						</Form>
 					</Col>
-					
 				</Row>
 			</div>
 		);
