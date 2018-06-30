@@ -13,11 +13,14 @@ to_file_q = queue.Queue(0)
         '3': {'name': "C", 'y_value': 3350, 'x_value': 2},
         '4': {'name': "D", 'y_value': 2500, 'x_value': 3},}'''
 
-status_to_str = {"0": 'Off', '1': 'On', '2': 'Started Up', '3': 'Start Diag', '4': 'Finish Diag', '5': 'Diag Error',
+sequence_to_str = {'0': 'Rocket Startup', '1': 'Diagnostics', '2': 'Launch', '3': 'Recovery', '4': 'Recovery', '5': 'Recovery',}
+
+command_to_str = {'0': 'Heartbeat', '1': 'Data', '2': 'Status Change', '3': 'Statistics'}
+
+status_to_str = {'0': 'Off', '1': 'On', '2': 'Started Up', '3': 'Start Diag', '4': 'Finish Diag', '5': 'Diag Error',
                  '6': 'Ready', '7': 'Launched', '8': 'Coast', '9': 'Apogee', '10': 'Primary Drouge Deploy',
                  '11': 'Secondary Drouge Deploy', '12': 'Primary Mains Deploy', '13': 'Secondary Mains Deploy', '14': 'Landing',
                  '15': 'Landed'}
-sequence_to_str = {"0": 'Rocket Startup', '1': 'Diagnostics', '2': 'Launch', '3': 'Recovery', '4': 'Recovery', '5': 'Recovery',}
 
 data = {}
 class index(Resource):
