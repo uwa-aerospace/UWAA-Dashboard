@@ -1,41 +1,6 @@
 import React, {Component} from  'react';
 import {Table} from 'antd';
 
-const data = [{
-    key: '1',
-    name: 'Altitude',
-    min: 0,
-    max: 0,
-    avg: 0,
-    status_min: 'RK_READY',
-    status_max: 'RK_APOGEE',
-    tal_min: '0',
-    tal_max: '20',
-    units: 'm',
-},{
-    key: '2',
-    name: 'Acceleration',
-    min: 0,
-    max: 4,
-    avg: 0,
-    status_min: 'RK_READY',
-    status_max: 'RK_LAUNCH',
-    tal_min: '0',
-    tal_max: '5',
-    units: 'm/s.s',
-},{
-    key: '3',
-    name: 'Velocity',
-    min: -15,
-    max: 600,
-    avg: 0,
-    status_min: 'RK_DROUGE',
-    status_max: 'RK_COAST',
-    tal_min: '30',
-    tal_max: '10',
-    units: 'm/s',
-}];
-
 const min_max_columns = [{
     title: 'Name',
     dataIndex: 'name',
@@ -95,7 +60,14 @@ const min_max_columns = [{
 
 class AnalysisTable extends Component {
 
+
     render() {
+        
+        var data = [];
+        data.push(this.props.data.altitude);
+        data.push(this.props.data.acceleration);
+        data.push(this.props.data.velocity);
+
         return (
             <Table columns={min_max_columns} dataSource={data} bordered={true} pagination={false}></Table>
         );
