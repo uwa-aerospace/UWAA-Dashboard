@@ -1,22 +1,23 @@
 import React, {Component} from 'react';
-import {Row} from 'antd';
+import {CSVLink} from 'react-csv';
+import {Row, Button } from 'antd';
 import AnalysisTable from './AnalysisTable';
 import AltitudeChart from './AltitudeChart';
 
 
 class AnalysisPanel extends Component {
-    state = {
-        table_data: [],
-    };
 
     render() {
         return (
             <Row>
                 <Row>
-                    <AltitudeChart />
+                    <AltitudeChart altitude_data={this.props.data}/>
                 </Row>
                 <Row>
-                    <AnalysisTable />
+                    <AnalysisTable data={this.props.min_max}/>
+                </Row>
+                <Row>
+                    <Button><CSVLink data={this.props.data} />Export</Button>
                 </Row>
             </Row>
         );

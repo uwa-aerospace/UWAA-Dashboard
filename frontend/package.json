@@ -8,6 +8,7 @@
     "prop-types": "^15.6.2",
     "react": "^16.4.1",
     "react-app-rewired": "^1.5.2",
+    "react-csv": "^1.0.14",
     "react-dom": "^16.4.1",
     "react-easy-chart": "^1.0.0",
     "react-scripts": "1.1.4",
