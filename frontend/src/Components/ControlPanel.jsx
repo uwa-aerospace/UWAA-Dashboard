@@ -128,19 +128,23 @@ class ControlPanel extends Component{
 						<Row>
 							<Col span={6} push={1}>
 								<Card hoverable={true} title={flight_status_card_title} extra={<Icon type="check-circle" style={{color:'green'}}/>}>
-									<List
-										itemLayout="horizontal"
-										dataSource={data}
-										renderItem={item => (
+									<List>
 										<List.Item>
-											<List.Item.Meta
-											avatar={}
-											title={<a href="https://ant.design">{item.title}</a>}
-											description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-											/>
+											Altitude
 										</List.Item>
-										)}
-									/>
+										<List.Item>
+											Acceleration
+										</List.Item>
+										<List.Item>
+											Velocity
+										</List.Item>
+										<List.Item>
+											Temperature
+										</List.Item>
+										<List.Item>
+											Pressure
+										</List.Item>
+									</List>
 								</Card>
 							</Col>
 						</Row>
