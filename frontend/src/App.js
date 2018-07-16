@@ -57,6 +57,8 @@ class App extends Component {
 		current_pressure: 0,
 		current_temp: 0,
 		current_altitude: 0,
+		latitude: -31.0,
+		longitude: 115.0,
 		flight_computer_status: 'Startup',
 		flight_status_text: 'Flight Computer Has Started Up',
 		flight_computer_sequence: 'Startup',
@@ -110,6 +112,8 @@ class App extends Component {
 			var velocity = this.state.current_velocity;
 			var pressure = this.state.current_pressure;
 			var temperature = this.state.current_temp;
+			var latitude = this.state.latitude;
+			var longitude = this.state.longitude;
 
 			var progress_error = this.state.progress_error;
 			var arr = this.state.altitude_data.slice();
@@ -124,6 +128,8 @@ class App extends Component {
 				velocity = parseFloat(content[key]['velocity']).toFixed(3);
 				pressure = (parseFloat(content[key]['pressure'])).toFixed(2);
 				temperature = parseFloat(content[key]['temperature']).toFixed(2);
+				latitude = parseFloat(content[key]['latitude']);
+				longitude = parseFloat(content[key]['longitude']);
 
 				if (altitude > this.state.min_max.altitude.max) {
 					new_min_max.altitude.max = altitude;
@@ -158,9 +164,10 @@ class App extends Component {
 				var notify_type = progress_error ? 'error' : 'success';
 				this.openNotification(notify_type, 'Status -> ' + content[key]['status'], '');
 			}
+			
 			this.setState({altitude_data: arr, curr_flight_sequence_id: seq_id, flight_computer_sequence: seq, light_computer_status: stat, progress_error: progress_error,
 				 current_altitude: altitude, current_acceleration: acceleration, current_velocity: velocity, current_pressure: pressure, current_temp: temperature,
-					min_max: new_min_max });
+					min_max: new_min_max, latitude: latitude, longitude: longitude });
 		})();
 	}
 

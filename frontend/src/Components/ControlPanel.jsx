@@ -40,7 +40,10 @@ class ControlPanel extends Component{
 			acceleration: this.props.data.current_acceleration,
 			velocity: this.props.data.current_velocity,
 			pressure: this.props.data.current_pressure,
-			temperature: this.props.data.current_temp,}
+			temperature: this.props.data.current_temp,
+			latitude: this.props.data.latitude,
+			longitude: this.props.data.longitude,}
+			
 		const progress_status = this.props.data.progress_error ? 'error' : 'process';
 		return (
 			<div className="control-panel" style={{height: '100%'}}>

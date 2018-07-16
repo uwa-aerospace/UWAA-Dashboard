@@ -17,10 +17,11 @@ class FlightStatus extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({ flight_status: nextProps.flight_status });  
+        this.setState({ flight_status: nextProps.flight_status });
     }
     
     render () {
+        console.log(this.state.flight_status.latitude)
         const good = 'green';
         const bad = 'red';
         let altitude_stat = good;
@@ -55,7 +56,8 @@ class FlightStatus extends Component {
                         {this.state.flight_status.temperature} C
                     </List.Item>
                     <List.Item>
-                        <List.Item.Meta avatar={<Avatar icon="compass" style={{ backgroundColor: 'black' }}/>} description={"Longitude: 10 Latitude: 99"} title="Position"/>
+                        <List.Item.Meta avatar={<Avatar icon="compass" style={{ backgroundColor: 'black' }}/>} title="Position"/>
+                        <span style={{float:'right'}}>Lat: {this.state.flight_status.latitude}</span> <span>Lon: {this.state.flight_status.longitude}</span>
                     </List.Item>
                 </List>
             </Card>
