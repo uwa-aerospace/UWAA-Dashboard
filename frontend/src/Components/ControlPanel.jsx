@@ -3,34 +3,12 @@ import {Row, Col, Divider} from 'antd';
 import {Steps, Form, Icon, Input, List} from 'antd';
 import AltitudeChart from './AltitudeChart';
 import FlightStatus from './FlightStatus';
+import Communications from './Communications';
 const Step = Steps.Step;
 const FormItem = Form.Item;
 const Search = Input.Search;
 
 class ControlPanel extends Component{
-	state = {
-		command_string: '',
-	}
-
-	handleChange(value) {
-		this.setState({command_string: value.target.value});
-	}
-	
-	handleSend(value) {
-		(async () => {
-			const rawResponse = await fetch('http://localhost:5000/send-command/', {
-				headers: {
-					'Accept': 'application/json',
-					'Content-Type': 'application/json',
-				},
-				method: 'POST',
-				body: JSON.stringify({command: value})
-			});
-			const content = await rawResponse.json();
-			console.log(content)
-		})();
-		this.setState({command_string: ''});
-	}
 
 	render() {
 		const data = this.props.data.altitude_data;
@@ -62,21 +40,7 @@ class ControlPanel extends Component{
 							<Step title="Landing"/>
 							<Step title="Landed"/>
 						</Steps>
-						<List bordered={true} header={<h4>Message Log</h4>}>
-							<List.Item>
-								<List.Item.Meta title={"Message"}/>
-							</List.Item>
-							<List.Item>
-								<List.Item.Meta title={"Message"}/>
-							</List.Item>
-						</List>
-						<Divider/>
-						<Form>
-							<FormItem>
-								<Search prefix={<Icon type="code-o"/>} type="text" placeholder="Enter Command" enterButton="Send" size="large" 
-								onSearch={value => this.handleSend(value)} onChange={value => this.handleChange(value)} value={this.props.data.command_string}/>
-							</FormItem>
-						</Form>
+						<Communications />
 					</Col>
 					<Col span={18}>
 						<Row>
