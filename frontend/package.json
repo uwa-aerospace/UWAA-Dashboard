@@ -11,6 +11,7 @@
     "react-csv": "^1.0.14",
     "react-dom": "^16.4.1",
     "react-easy-chart": "^1.0.0",
+    "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
     "recharts": "^1.0.0-beta.10",
     "yarn": "^1.7.0"

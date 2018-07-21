@@ -86,6 +86,9 @@ class ControlPanel extends Component{
 							<Col span={8} push={1}>
 								<FlightStatus flight_status={flight_status}/>
 							</Col>
+							<Col span={9} push={1}>
+									This is where the GPS graph should go
+							</Col>
 						</Row>
 					</Col>
 				</Row>

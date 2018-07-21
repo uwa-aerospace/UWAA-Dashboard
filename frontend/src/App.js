@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Layout, Menu, Icon, notification } from 'antd';
 import ControlPanel from './Components/ControlPanel';
 import AnalysisPanel from './Components/AnalysisPanel';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import './App.css';
 const { Content, Sider } = Layout;
 
@@ -183,37 +184,38 @@ class App extends Component {
     this.setState({content_selected: item.key});
   }
   render() {
-		let content;
-    if (this.state.content_selected-1 == 0) {
-			content = <ControlPanel data={this.state}/>
-    } else {
-			content = <AnalysisPanel min_max={this.state.min_max} data={this.state.altitude_data}/>
-		}
     return (
-      <Layout style={{ minHeight: '100vh'}}>
-          <Sider collapsible={true} collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
-          <div className="logo" />
-            <Menu theme="dark" mode="vertical" defaultSelectedKeys={['1']} onClick={this.handleContentChange}>
-              <Menu.Item key="1">
-                <Icon type="dashboard" />
-                <span>Control Panel</span>
-              </Menu.Item>
-              <Menu.Item key="2">
-                <Icon type="dot-chart" />
-                <span>Analysis</span>
-              </Menu.Item>
-              <Menu.Item key="3">
-                <Icon type="save" />
-                <span>Save</span>
-              </Menu.Item>
-            </Menu>
-          </Sider>
-          <Layout>
-            <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
-							{content}
-            </Content>
-        </Layout>
-      </Layout>
+			<Router>
+				<Layout style={{ minHeight: '100vh'}}>
+					<Sider collapsible={true} collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
+					<div className="logo" />
+						<Menu theme="dark" mode="vertical" defaultSelectedKeys={['1']} onClick={this.handleContentChange}>
+							<Menu.Item key="1">
+								<Link to="/">
+									<Icon type="dashboard" />
+									<span>Control Panel</span>
+								</Link>
+							</Menu.Item>
+							<Menu.Item key="2">
+								<Link to="/analysis">
+									<Icon type="dot-chart" />
+									<span>Analysis</span>
+								</Link>
+							</Menu.Item>
+							<Menu.Item key="3">
+								<Icon type="save" />
+								<span>Save</span>
+							</Menu.Item>
+						</Menu>
+					</Sider>
+					<Layout>
+						<Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
+							<Route exact path="/" render={()=><ControlPanel data={this.state}/>} />
+							<Route exact path="/analysis" render={()=><AnalysisPanel data={this.state.altitude_data} min_max={this.state.min_max} />} />
+						</Content>
+					</Layout>
+				</Layout>
+			</Router>
     );
   }
 }
