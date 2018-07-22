@@ -43,6 +43,8 @@ class index(Resource):
                     data[value[0]]['velocity'] = value[7]
                     data[value[0]]['pressure'] = value[8]
                     data[value[0]]['temperature'] = value[9]
+                    data[value[0]]['latitude'] = value[10]
+                    data[value[0]]['longitude'] = value[11]
 
             to_file_q.put(value)
             from_ardu_q.task_done()
