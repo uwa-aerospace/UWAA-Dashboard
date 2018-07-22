@@ -76,7 +76,7 @@ def flaskThread():
 if __name__ == "__main__":
     #dm.arduino.start_reading()
     #dm.writer.start_thread()
-    ardu = ArduinoIO('COM4', 9600, 150, from_ardu_q, to_ardu_q)
+    ardu = ArduinoIO('COM6', 9600, 150, from_ardu_q, to_ardu_q)
     ardu.start_reading()
 
     #writer = DataWriter(write_queue=to_file_q)
