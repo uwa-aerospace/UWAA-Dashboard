@@ -49,6 +49,8 @@ class index(Resource):
                     data[value[0]]['temperature'] = value[9]
                     data[value[0]]['latitude'] = value[10]
                     data[value[0]]['longitude'] = value[11]
+                elif msg_type == 4:
+                    log_file.write("FLIGHT_STATS:\t")
                 log_file.write(base_str+'\n')
                 log_file.flush()
             to_file_q.put(value)
