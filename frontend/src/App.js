@@ -176,11 +176,6 @@ class App extends Component {
 		})();
 	}
 
-
-	handleChange(value) {
-		this.setState({command_string: value.target.value});
-	}
-
   onCollapse = (collapsed) => {
     this.setState({ collapsed });
   }
