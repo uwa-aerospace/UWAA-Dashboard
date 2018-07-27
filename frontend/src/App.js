@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Layout, Menu, Icon, notification } from 'antd';
 import ControlPanel from './Components/ControlPanel';
 import AnalysisPanel from './Components/AnalysisPanel';
+import SavePanel from './Components/SavePanel';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import './App.css';
 const { Content, Sider } = Layout;
@@ -60,6 +61,7 @@ class App extends Component {
 		current_altitude: 0,
 		latitude: -31.0,
 		longitude: 115.0,
+		log: [],
 		flight_computer_status: 'Startup',
 		flight_status_text: 'Flight Computer Has Started Up',
 		flight_computer_sequence: 'Startup',
@@ -67,7 +69,7 @@ class App extends Component {
   };
 
   componentDidMount() {
-		this.interval = setInterval(() => this.fetchData(), 200);
+		this.interval = setInterval(() => this.fetchData(), 400);
 		console.log();
 	}
 	componentWillUnmount() {
@@ -104,7 +106,7 @@ class App extends Component {
 				method: 'GET',
 			});
 			const content = await rawResponse.json();
-
+			
 			var seq_id = this.state.curr_flight_sequence_id;
 			var stat = this.state.flight_computer_status;
 			var seq = this.state.flight_computer_sequence;
@@ -115,6 +117,7 @@ class App extends Component {
 			var temperature = this.state.current_temp;
 			var latitude = this.state.latitude;
 			var longitude = this.state.longitude;
+			var log = this.state.log.slice();
 
 			var progress_error = this.state.progress_error;
 			var arr = this.state.altitude_data.slice();
@@ -122,6 +125,7 @@ class App extends Component {
 			var new_min_max = this.state.min_max;
 			for (var key in content) {
 				arr.push({time: parseInt(key)/1000, alti: parseInt(content[key]['altitude'])});
+				log.push(content[key]);
 				seq = content[key]['sequence']
 				stat = content[key]['status']
 				altitude = parseFloat(content[key]['altitude']).toFixed(2);
@@ -168,7 +172,7 @@ class App extends Component {
 			
 			this.setState({altitude_data: arr, curr_flight_sequence_id: seq_id, flight_computer_sequence: seq, light_computer_status: stat, progress_error: progress_error,
 				 current_altitude: altitude, current_acceleration: acceleration, current_velocity: velocity, current_pressure: pressure, current_temp: temperature,
-					min_max: new_min_max, latitude: latitude, longitude: longitude });
+					min_max: new_min_max, latitude: latitude, longitude: longitude, log: log });
 		})();
 	}
 
@@ -184,6 +188,7 @@ class App extends Component {
     this.setState({content_selected: item.key});
   }
   render() {
+		const log = this.state.log;
     return (
 			<Router>
 				<Layout style={{ minHeight: '100vh'}}>
@@ -203,8 +208,10 @@ class App extends Component {
 								</Link>
 							</Menu.Item>
 							<Menu.Item key="3">
-								<Icon type="save" />
-								<span>Save</span>
+								<Link to="/save-data">
+									<Icon type="save" />
+									<span>Save</span>
+								</Link>
 							</Menu.Item>
 						</Menu>
 					</Sider>
@@ -212,6 +219,7 @@ class App extends Component {
 						<Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
 							<Route exact path="/" render={()=><ControlPanel data={this.state}/>} />
 							<Route exact path="/analysis" render={()=><AnalysisPanel data={this.state.altitude_data} min_max={this.state.min_max} />} />
+							<Route exact path="/save-data" render={()=><SavePanel data={log} min_max={this.state.min_max} />} />
 						</Content>
 					</Layout>
 				</Layout>

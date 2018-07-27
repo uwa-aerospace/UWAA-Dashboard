@@ -8,6 +8,9 @@ from_ardu_q = queue.Queue(0)
 to_ardu_q = queue.Queue(0)
 to_file_q = queue.Queue(0)
 
+import random
+log_file = open('./flight_data/{0}.txt'.format(random.randint(1, 999999999)), 'w+')
+
 '''data = {'1': {'name': "A", 'y_value': 0, 'x_value': 0},
         '2': {'name': "B", 'y_value': 2000, 'x_value': 1},
         '3': {'name': "C", 'y_value': 3350, 'x_value': 2},
@@ -27,7 +30,8 @@ class index(Resource):
     def get(self):
         data = {}
         while not from_ardu_q.empty():
-            value = str(from_ardu_q.get(), 'utf-8').replace('\r', '').replace('\n', '').split(',')
+            base_str = str(from_ardu_q.get(), 'utf-8')
+            value = base_str.replace('\r', '').replace('\n', '').split(',')
             print(value)
             if len(value) >= 3:
                 msg_type = int(value[1])
@@ -45,7 +49,8 @@ class index(Resource):
                     data[value[0]]['temperature'] = value[9]
                     data[value[0]]['latitude'] = value[10]
                     data[value[0]]['longitude'] = value[11]
-
+                log_file.write(base_str+'\n')
+                log_file.flush()
             to_file_q.put(value)
             from_ardu_q.task_done()
         return data
